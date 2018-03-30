@@ -6,14 +6,14 @@ import requests
 SEARCH_PATH = "cgi/search.pl"
 
 
-def get_product(barcode):
+def get_product(barcode, lang='world'):
     """
     Return information of a given product.
     """
-    return utils.fetch('api/v0/product/%s' % barcode)
+    return utils.fetch('api/v0/product/%s' % barcode, lang)
 
 
-def get_by_facets(query, page=1):
+def get_by_facets(query, page=1, lang='world'):
     """
     Return products for a set of facets.
     """
@@ -29,7 +29,7 @@ def get_by_facets(query, page=1):
             path.append(key)
             path.append(query[key])
 
-        return utils.fetch('%s/%s' % ('/'.join(path), page))['products']
+        return utils.fetch('%s/%s' % ('/'.join(path), page), lang)['products']
 
 
 def add_new_product(postData):
@@ -39,10 +39,10 @@ def add_new_product(postData):
     if not postData['code'] or not postData['product_name']:
         raise ValueError('code or product_name not found!')
 
-    return requests.post(utils.API_URL+"cgi/product_jqm2.pl", data=postData)
+    return requests.post(utils.API_URL % ('world')+"cgi/product_jqm2.pl", data=postData)
 
 
-def search(query, page=1, page_size=20, sort_by='unique_scans'):
+def search(query, page=1, page_size=20, sort_by='unique_scans', lang='world'):
     """
     Perform a search using Open Food Facts search engine.
     """
@@ -54,4 +54,4 @@ def search(query, page=1, page_size=20, sort_by='unique_scans'):
         page_size=page_size,
         sort_by=sort_by
     )
-    return utils.fetch(path, json_file=False)
+    return utils.fetch(path, lang, json_file=False)

@@ -17,8 +17,8 @@ def add_fetch_function(facet):
 
         openfoodfacts.facets.fetch_traces()
     """
-    def func():
-        return utils.fetch(facet)['tags']
+    def func(lang='world'):
+        return utils.fetch(facet, lang)['tags']
     func.__name__ = "get_%s" % facet
     setattr(facets, func.__name__, func)
 
